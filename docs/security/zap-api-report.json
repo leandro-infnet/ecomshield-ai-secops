@@ -1,8 +1,8 @@
 {
 	"@programName": "ZAP",
 	"@version": "2.17.0",
-	"@generated": "Mon, 28 Sept 2026 04:35:57",
-	"created": "2026-09-28T04:35:57.041218898Z",
+	"@generated": "Mon, 26 Oct 2026 00:59:35",
+	"created": "2026-10-26T00:59:35.116002967Z",
 	"insights":[
 		{
 			"level": "Info",
@@ -83,11 +83,11 @@
 						{
 							"id": "0",
 							"uri": "http://127.0.0.1:18081/auth/token",
-							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(password,username)",
+							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(client_id,client_secret,grant_type,password,scope,username)",
 							"method": "POST",
 							"param": "",
 							"attack": "",
-							"evidence": "401",
+							"evidence": "422",
 							"otherinfo": ""
 						},
 						{
@@ -123,7 +123,7 @@
 						{
 							"id": "3",
 							"uri": "http://127.0.0.1:18081/auth/token",
-							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(password,username)",
+							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(client_id,client_secret,grant_type,password,scope,username)",
 							"method": "POST",
 							"param": "username",
 							"attack": "",
@@ -161,7 +161,7 @@
 							"otherinfo": ""
 						},
 						{
-							"id": "7",
+							"id": "8",
 							"uri": "http://127.0.0.1:18081/openapi.json",
 							"nodeName": "http:\/\/127.0.0.1:18081\/openapi.json",
 							"method": "GET",
@@ -171,7 +171,7 @@
 							"otherinfo": ""
 						},
 						{
-							"id": "5",
+							"id": "6",
 							"uri": "http://127.0.0.1:18081/predictions/10",
 							"nodeName": "http:\/\/127.0.0.1:18081\/predictions\/10",
 							"method": "GET",
@@ -181,9 +181,9 @@
 							"otherinfo": ""
 						},
 						{
-							"id": "6",
+							"id": "7",
 							"uri": "http://127.0.0.1:18081/auth/token",
-							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(password,username)",
+							"nodeName": "http:\/\/127.0.0.1:18081\/auth\/token ()(client_id,client_secret,grant_type,password,scope,username)",
 							"method": "POST",
 							"param": "",
 							"attack": "",
@@ -191,7 +191,7 @@
 							"otherinfo": ""
 						},
 						{
-							"id": "8",
+							"id": "5",
 							"uri": "http://127.0.0.1:18081/predict",
 							"nodeName": "http:\/\/127.0.0.1:18081\/predict ()({texto_cliente})",
 							"method": "POST",

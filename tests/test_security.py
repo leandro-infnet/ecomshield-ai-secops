@@ -1,12 +1,16 @@
 import os
 import asyncio
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
 
 import jwt
 import httpx
 import pytest
 from sqlmodel import Session, create_engine
+from uvicorn import Config
 
+os.environ["PYTHON_DOTENV_DISABLED"] = "1"
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 os.environ["SECRET_KEY"] = "synthetic-test-secret-with-at-least-32-characters"
 os.environ["CORS_ORIGINS"] = "http://allowed.example"
 os.environ.pop("BOOTSTRAP_USERNAME", None)
@@ -20,9 +24,18 @@ from app.main import app
 
 
 class APIClient:
+    def __init__(
+        self,
+        asgi_app: Callable[..., Awaitable[None]] = app,
+        client_address: tuple[str, int] = ("127.0.0.1", 12345),
+    ):
+        self.asgi_app = asgi_app
+        self.client_address = client_address
+
     def request(self, method, path, **kwargs):
         async def send():
-            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://testserver") as client:
+            transport = httpx.ASGITransport(app=self.asgi_app, client=self.client_address)
+            async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
                 return await client.request(method, path, **kwargs)
         return asyncio.run(send())
 
@@ -83,6 +96,33 @@ def test_extra_field_is_rejected(client):
     assert response.json()["detail"][0]["type"] == "extra_forbidden"
     for body in ({}, {"texto_cliente": None}, {"texto_cliente": 123}, {"texto_cliente": "curto"[:4]}, {"texto_cliente": "x" * 101}):
         assert client.post("/predict", json=body, headers=headers).status_code == 422
+
+
+def test_login_accepts_oauth2_form_and_rejects_extra_fields(client):
+    form = {
+        "username": "alice", "password": "alice-synthetic-password",
+        "grant_type": "password", "scope": "", "client_id": "", "client_secret": "",
+    }
+    assert client.post("/auth/token", data=form).status_code == 200
+    extra = client.post("/auth/token", data={**form, "admin": "true"})
+    assert extra.status_code == 422
+    assert any(error["type"] == "extra_forbidden" for error in extra.json()["detail"])
+    assert client.post("/auth/token", data={**form, "grant_type": "client_credentials"}).status_code == 422
+
+
+def test_rate_limit_ignores_forwarded_headers_when_proxy_headers_are_disabled(client):
+    # Mesma configuração do comando local --no-proxy-headers no README.
+    config = Config(app, proxy_headers=False, lifespan="off", log_config=None)
+    config.load()
+    runtime_client = APIClient(asgi_app=config.loaded_app)
+    statuses = []
+    for attempt in range(6):
+        response = runtime_client.post(
+            "/auth/token", data={"username": "nobody", "password": "wrong"},
+            headers={"X-Forwarded-For": f"203.0.113.{attempt + 1}"},
+        )
+        statuses.append(response.status_code)
+    assert statuses == [401, 401, 401, 401, 401, 429]
 
 
 def test_headers_cors_and_rate_limit(client):

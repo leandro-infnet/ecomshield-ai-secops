@@ -12,7 +12,7 @@ As setas de duas pontas representam consultas e seus resultados; na criação de
 
 | Entrada | Processamento e dados | Resultado |
 | --- | --- | --- |
-| `POST /auth/token` | Limita cinco tentativas por IP em 60 segundos, consulta o usuário via SQLModel, verifica o hash PBKDF2 da senha e assina o JWT com HS256. | Token e tipo `bearer`, 401 para credenciais inválidas ou 429 ao exceder o limite. |
+| `POST /auth/token` | Limita cinco tentativas por IP em 60 segundos, valida o formulário Pydantic, consulta o usuário via SQLModel, verifica o hash PBKDF2 da senha e assina o JWT com HS256. | Token e tipo `bearer`, 401 para credenciais inválidas, 422 para campos desconhecidos ou inválidos e 429 ao exceder o limite. |
 | `POST /predict` | `get_current_user` verifica assinatura, expiração e sujeito do JWT e consulta o usuário. Pydantic rejeita campos extras e exige texto entre 5 e 100 caracteres. A rota grava texto, `owner_id` da identidade validada, intenção fixa e confiança 0,0. | `id`, `intencao_prevista` e `confianca`; o texto e o proprietário não são expostos na resposta. |
 | `GET /predictions/{prediction_id}` | Valida a identidade e consulta a predição filtrando simultaneamente o ID solicitado e o `owner_id` autenticado. | Registro próprio ou 404 para ID inexistente ou de outro usuário. Token ausente ou inválido recebe 401. |
 | `GET /health` | Retorna valores fixos, sem consultar o banco ou verificar dependências. | Status e nome do serviço; não comprova disponibilidade do SQLite. |
@@ -25,4 +25,4 @@ Na inicialização, a aplicação verifica a chave secreta e cria as tabelas pel
 
 O arquivo SQLite padrão fica em `data/processed/ecomshield.db`. O limite de autenticação é mantido em memória por processo. O texto recebido é armazenado para demonstração, sem executar instruções ou acionar ferramentas. O notebook e o dataset pertencem ao fluxo de análise offline e não são consultados pelas rotas. Não há modelo treinado nem chamada a serviço externo em runtime.
 
-A execução local usa HTTP. TLS e controles de rede dependem da implantação; o header HSTS não cifra essa conexão local. CORS é uma política para navegadores e não substitui a autenticação. Consulte também as [ameaças e limitações](../security/stride.md) e o [mapa de controles OWASP](../security/owasp-api-top10.md).
+A execução local usa HTTP e o comando do README desabilita proxy headers com `--no-proxy-headers`, preservando o IP da conexão usado no rate limiting. TLS e controles de rede dependem da implantação; o header HSTS não cifra essa conexão local. CORS é uma política para navegadores e não substitui a autenticação. Consulte também as [ameaças e limitações](../security/stride.md) e o [mapa de controles OWASP](../security/owasp-api-top10.md).

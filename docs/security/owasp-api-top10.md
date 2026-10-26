@@ -5,8 +5,8 @@ A [lista OWASP](https://api-security.owasp.org/editions/2023/en/0x11-t10/) organ
 | Risco | Controle atual | Lacuna ou condição |
 | --- | --- | --- |
 | API1 — Broken Object Level Authorization | `GET /predictions/{id}` consulta `id` e `owner_id` autenticado; teste com outro usuário recebe 404. | Nova rota por ID exigirá a mesma verificação. |
-| API2 — Broken Authentication | JWT HS256 com assinatura, expiração e usuário existente; senha PBKDF2 com salt; 429 após cinco tentativas/minuto/IP. | Sem recuperação de conta, revogação de token ou rate limit distribuído. |
-| API3 — Broken Object Property Level Authorization | `PredictRequest` proíbe extras; resposta expõe apenas `id`, intenção e confiança. | Não há rotas de atualização de propriedades. |
+| API2 — Broken Authentication | JWT HS256 com assinatura, expiração e usuário existente; senha PBKDF2 com salt; 429 após cinco tentativas/minuto/IP. O comando local desabilita proxy headers para impedir contorno por `X-Forwarded-For` forjado. | Sem recuperação de conta, revogação de token ou rate limit distribuído. |
+| API3 — Broken Object Property Level Authorization | `LoginRequest` e `PredictRequest` proíbem extras; a resposta de predição expõe apenas `id`, intenção e confiança. | Não há rotas de atualização de propriedades. |
 | API4 — Unrestricted Resource Consumption | 100 caracteres por mensagem e rate limit no login. | Sem limites globais, de conexão, de concorrência ou do banco; estes devem ser configurados na infraestrutura. |
 | API5 — Broken Function Level Authorization | Não há ações administrativas expostas. | Funções futuras precisarão de escopos/papéis. |
 | API6 — Unrestricted Access to Sensitive Business Flows | Placeholder não executa estornos nem outras transações. | Fluxos transacionais futuros precisarão de controles próprios. |

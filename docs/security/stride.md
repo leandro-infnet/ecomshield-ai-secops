@@ -8,7 +8,7 @@ A análise usa [STRIDE](https://learn.microsoft.com/en-us/azure/security/develop
 | Tampering | Campo extra altera o contrato | Pydantic `extra='forbid'` responde 422; JWT não protege o body HTTP. TLS é necessário para trânsito fora do host. |
 | Repudiation | Usuário nega criação de predição | O registro tem `owner_id`, mas não existe trilha de auditoria imutável. |
 | Information disclosure | Usuário troca ID para ler registro alheio | Consulta SQLModel filtra `id` e `owner_id`; outro usuário recebe 404. O banco local e backups precisam de proteção operacional. |
-| Denial of service | Força bruta no login | Cinco tentativas/IP/minuto em memória; sem limite distribuído, quotas de inferência ou proteção contra tráfego volumoso. |
+| Denial of service | Força bruta no login | Cinco tentativas/IP/minuto em memória, com proxy headers desabilitados no comando local; teste cobre `X-Forwarded-For` variável. Sem limite distribuído, quotas de inferência ou proteção contra tráfego volumoso. |
 | Elevation of privilege | Cliente manipula `sub`/ID | A assinatura é validada e o proprietário vem do usuário encontrado no banco, não do body. Não há funções administrativas. |
 
 ## 🧩 Confidencialidade, integridade e disponibilidade por componente
