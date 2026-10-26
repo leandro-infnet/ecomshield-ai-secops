@@ -1,7 +1,181 @@
-venv/
+# =============================================================================
+# Python
+# =============================================================================
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Distribuição / empacotamento
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+.installed.cfg
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# =============================================================================
+# Secrets e variáveis de ambiente
+# =============================================================================
 .env
+.env.*
+!.env.example
+!.env.template
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+secrets/
+credentials/
+service-account*.json
+
+# =============================================================================
+# Dados
+# =============================================================================
 data/raw/*
 data/processed/*
+data/interim/*
+data/external/*
 !data/**/.gitkeep
+
+# Bancos de dados locais
+*.db
+*.sqlite
+*.sqlite3
+
+# =============================================================================
+# Jupyter Notebook
+# =============================================================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# =============================================================================
+# Modelos treinados e artefatos de ML  (binários pesados)
+# =============================================================================
+models/
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
+*.safetensors
+mlruns/
+mlartifacts/
+
+# =============================================================================
+# Testes e cobertura
+# =============================================================================
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+nosetests.xml
+pytest.ini.bak
+*.lcov
+
+# =============================================================================
+# Type checkers e linters
+# =============================================================================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytype/
+
+# =============================================================================
+# IDEs e editores
+# =============================================================================
+# VSCode
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.template
+
+# JetBrains (PyCharm, IntelliJ…)
+.idea/
+*.iml
+*.iws
+
+# Vim / Neovim
+*.swp
+*.swo
+*~
+Session.vim
+
+# =============================================================================
+# Sistemas operacionais
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+**/*Zone.Identifier
+
+# Linux
+.directory
+
+# =============================================================================
+# Docker / Containers
+# =============================================================================
+.dockerignore.local
+docker-compose.override.yml
+
+# =============================================================================
+# Logs e relatórios temporários
+# =============================================================================
+*.log
+logs/
+*.out
+*.err
+
+# =============================================================================
+# Ferramentas de segurança  (artefatos gerados automaticamente)
+# =============================================================================
+# Banham os relatórios brutos; manter apenas os versionados em docs/
+zap-*.xml
+zap-*.tmp
+bandit-report.json
+safety-report.json
+trivy-report.*
+semgrep-*.json
+
+# =============================================================================
+# CI/CD e infra
+# =============================================================================
+.terraform/
+*.tfstate
+*.tfstate.backup
+.vagrant/
+
+# =============================================================================
+# Instruções locais privadas (agente / LLM)
+# =============================================================================
+/AGENTS.md
+/AGENTS.override.md
+/.local-instructions/
