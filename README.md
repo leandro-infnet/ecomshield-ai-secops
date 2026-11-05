@@ -4,7 +4,7 @@ API demonstrativa de atendimento para registrar uma intenção placeholder por m
 
 ## 📚 Percurso de leitura
 
-- [Relatório central do TP2 para futura exportação em PDF](docs/tp2-relatorio.md)
+- [Resumo técnico do TP2](docs/tp2-relatorio.md)
 - [Relatório de EDA](docs/eda/tp2.md) e [notebook executado](notebooks/01_eda_ecomshield.ipynb)
 - [Fluxo de dados](docs/architecture/dfd.md), [ameaças](docs/security/stride.md), [mapa OWASP API Top 10](docs/security/owasp-api-top10.md) e [findings ZAP](docs/security/zap-findings.md)
 - [Glossário](docs/glossario.md) e [changelog](CHANGELOG.md)

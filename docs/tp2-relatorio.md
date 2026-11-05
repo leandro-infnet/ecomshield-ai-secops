@@ -2,7 +2,7 @@
 
 ## 1. Problema e objetivo
 
-O TP2 aprofunda a análise do dataset de suporte ao cliente e fortalece a API FastAPI que registra predições demonstrativas. O objetivo futuro é classificar a intenção de mensagens; nesta etapa, **não há modelo treinado**. O retorno de `/predict` é um placeholder explícito, com confiança 0,0. Este documento é a fonte Markdown para a entrega; o PDF será produzido posteriormente pelo aluno.
+O TP2 aprofunda a análise do dataset de suporte ao cliente e fortalece a API FastAPI que registra predições demonstrativas. O objetivo futuro é classificar a intenção de mensagens; nesta etapa, **não há modelo treinado**. O retorno de `/predict` é um placeholder explícito, com confiança 0,0. Este documento resume o projeto.
 
 ## 2. Dados e análise exploratória
 
