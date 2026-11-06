@@ -47,14 +47,14 @@ O SQLite local é demonstrativo. Não há migrações, recuperação de conta, r
 ## ✅ Verificação
 
 ```bash
-venv/bin/python -m pytest tests/
+venv/bin/python -m pytest tests/ -v
 ```
 
-A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento de `.env`. Os sete testes incluem rejeição de extras no login e limite de tentativas com `X-Forwarded-For` variável na cadeia ASGI do Uvicorn configurada com proxy headers desabilitados. Veja o [relatório ZAP](docs/security/zap-findings.md) para escopo e achados do scan passivo. Um scan passivo não substitui testes autenticados de autorização nem comprova conformidade integral com o OWASP Top 10.
+A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento de `.env`. No exercício 2 do TP3, os 37 casos passaram, cobrindo autenticação, BOLA, entradas inválidas, limites válidos, headers, CORS e rate limiting. A [matriz de cobertura e evidência da execução](docs/security/tp3-testes.md) detalha os cenários e as limitações. O limite também é verificado com `X-Forwarded-For` variável na cadeia ASGI do Uvicorn configurada com proxy headers desabilitados. Veja o [relatório ZAP](docs/security/zap-findings.md) para escopo e achados do scan passivo. Um scan passivo não substitui testes autenticados de autorização nem comprova conformidade integral com o OWASP Top 10.
 
 ## Fontes e uso de IA
 
 - [OWASP API Security Top 10 de 2023](https://api-security.owasp.org/editions/2023/en/0x11-t10/)
 - [SQLModel: consultas filtradas](https://sqlmodel.tiangolo.com/tutorial/where/)
 - [OWASP ZAP: baseline passivo](https://www.zaproxy.org/docs/docker/baseline-scan/)
-- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e no exercício 1 do TP3; os resultados informados nos artefatos vieram de execuções locais.
+- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 e 2 do TP3; os resultados informados nos artefatos vieram de execuções locais.

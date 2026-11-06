@@ -2,6 +2,8 @@
 
 ## 📊 Ainda não publicado — TP3
 
+- Exercício 2: suíte de segurança ampliada para 37 casos, com autenticação nas duas rotas protegidas, BOLA nos dois sentidos, validação sem persistência indevida e recuperação do rate limiting; matriz de cobertura e evidência sanitizada da execução.
+
 - Exercício 1: notebook de regressão simples e múltipla com divisão por grupos de textos, baseline da média, R², RMSE, residual plots e Q-Q plots.
 - Resultados reproduzíveis em JSON, figura exportada e discussão das limitações da regressão para classificar intenções.
 - Dependências de scikit-learn adicionadas sem atualização das dependências anteriores.

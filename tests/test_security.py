@@ -2,24 +2,27 @@ import os
 import asyncio
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 
 import jwt
 import httpx
 import pytest
-from sqlmodel import Session, create_engine
+from sqlmodel import Session, create_engine, select
 from uvicorn import Config
 
 os.environ["PYTHON_DOTENV_DISABLED"] = "1"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 os.environ["SECRET_KEY"] = "synthetic-test-secret-with-at-least-32-characters"
+os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"] = "30"
 os.environ["CORS_ORIGINS"] = "http://allowed.example"
 os.environ.pop("BOOTSTRAP_USERNAME", None)
 os.environ.pop("BOOTSTRAP_PASSWORD", None)
 
+from app.api.routes import auth
 from app.api.routes.auth import _attempts
 from app.core.security import hash_password
 from app.db import database
-from app.db.models import User
+from app.db.models import Prediction, User
 from app.main import app
 
 
@@ -56,8 +59,11 @@ def client(tmp_path, monkeypatch):
         session.add(User(username="alice", password_hash=hash_password("alice-synthetic-password")))
         session.add(User(username="bob", password_hash=hash_password("bob-synthetic-password")))
         session.commit()
-    yield APIClient()
-    engine.dispose()
+    try:
+        yield APIClient()
+    finally:
+        _attempts.clear()
+        engine.dispose()
 
 
 def token(client, username, password):
@@ -66,36 +72,122 @@ def token(client, username, password):
     return response.json()["access_token"]
 
 
-def test_predict_requires_valid_token(client):
-    body = {"texto_cliente": "Onde esta meu pedido?"}
-    assert client.post("/predict", json=body).status_code == 401
-    assert client.post("/predict", json=body, headers={"Authorization": "Bearer arbitrary"}).status_code == 401
-    valid = token(client, "alice", "alice-synthetic-password")
-    assert client.post("/predict", json=body, headers={"Authorization": f"Bearer {valid}"}).status_code == 200
-    expired = jwt.encode({"sub": "alice", "exp": datetime.now(timezone.utc) - timedelta(seconds=1)}, os.environ["SECRET_KEY"], algorithm="HS256")
-    assert client.post("/predict", json=body, headers={"Authorization": f"Bearer {expired}"}).status_code == 401
-    tampered = jwt.encode({"sub": "alice", "exp": datetime.now(timezone.utc) + timedelta(minutes=1)}, "another-synthetic-secret-with-32-characters", algorithm="HS256")
-    assert client.post("/predict", json=body, headers={"Authorization": f"Bearer {tampered}"}).status_code == 401
+@pytest.mark.parametrize("method,path", [
+    ("POST", "/predict"), ("GET", "/predictions/1"),
+], ids=["predict", "consulta"])
+def test_protected_routes_require_token(client, method, path):
+    kwargs = {"json": {"texto_cliente": "Onde esta meu pedido?"}} if method == "POST" else {}
+    response = client.request(method, path, **kwargs)
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+
+
+@pytest.mark.parametrize("case", [
+    "arbitrary", "expired", "tampered", "missing_exp", "missing_sub",
+    "empty_sub", "unknown_user", "wrong_algorithm",
+])
+@pytest.mark.parametrize("method,path", [
+    ("POST", "/predict"), ("GET", "/predictions/1"),
+], ids=["predict", "consulta"])
+def test_protected_routes_reject_invalid_token(client, case, method, path):
+    claims = {"sub": "alice", "exp": datetime.now(timezone.utc) + timedelta(minutes=1)}
+    key = os.environ["SECRET_KEY"]
+    algorithm = "HS256"
+    if case == "expired":
+        claims["exp"] = datetime.now(timezone.utc) - timedelta(minutes=1)
+    elif case == "tampered":
+        key = "another-synthetic-secret-with-at-least-64-characters-for-hmac-testing"
+    elif case == "missing_exp":
+        claims.pop("exp")
+    elif case == "missing_sub":
+        claims.pop("sub")
+    elif case == "empty_sub":
+        claims["sub"] = ""
+    elif case == "unknown_user":
+        claims["sub"] = "nobody"
+    elif case == "wrong_algorithm":
+        algorithm = "HS384"
+    bearer = "arbitrary" if case == "arbitrary" else jwt.encode(claims, key, algorithm=algorithm)
+    kwargs = {"json": {"texto_cliente": "Onde esta meu pedido?"}} if method == "POST" else {}
+    response = client.request(method, path, headers={"Authorization": f"Bearer {bearer}"}, **kwargs)
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+    with Session(database.engine) as session:
+        assert session.exec(select(Prediction)).all() == []
+
+
+def test_valid_login_creates_prediction_for_authenticated_owner(client):
+    alice = token(client, "alice", "alice-synthetic-password")
+    response = client.post("/predict", json={"texto_cliente": "Onde esta meu pedido?"},
+                           headers={"Authorization": f"Bearer {alice}"})
+    assert response.status_code == 200
+    assert set(response.json()) == {"id", "intencao_prevista", "confianca"}
+    with Session(database.engine) as session:
+        prediction = session.get(Prediction, response.json()["id"])
+        assert prediction is not None
+        owner = session.exec(select(User).where(User.username == "alice")).one()
+        assert prediction.owner_id == owner.id
+        assert prediction.texto_cliente == "Onde esta meu pedido?"
+
+
+@pytest.mark.parametrize("username,password", [
+    ("alice", "wrong-password"), ("nobody", "wrong-password"),
+], ids=["senha_incorreta", "usuario_inexistente"])
+def test_login_rejects_invalid_credentials(client, username, password):
+    response = client.post("/auth/token", data={"username": username, "password": password})
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Credenciais inválidas"}
+    assert "access_token" not in response.json()
 
 
 def test_prediction_ownership(client):
     alice = token(client, "alice", "alice-synthetic-password")
     bob = token(client, "bob", "bob-synthetic-password")
-    created = client.post("/predict", json={"texto_cliente": "Preciso de ajuda"}, headers={"Authorization": f"Bearer {alice}"})
-    assert created.status_code == 200
-    prediction_id = created.json()["id"]
-    assert client.get(f"/predictions/{prediction_id}", headers={"Authorization": f"Bearer {alice}"}).status_code == 200
-    assert client.get(f"/predictions/{prediction_id}", headers={"Authorization": f"Bearer {bob}"}).status_code == 404
+    records = []
+    for bearer, message in [(alice, "Preciso de ajuda"), (bob, "Quero cancelar meu pedido")]:
+        created = client.post("/predict", json={"texto_cliente": message},
+                              headers={"Authorization": f"Bearer {bearer}"})
+        assert created.status_code == 200
+        records.append(created.json())
+    assert records[0]["id"] != records[1]["id"]
+    for owner, other, record in [(alice, bob, records[0]), (bob, alice, records[1])]:
+        path = f"/predictions/{record['id']}"
+        own = client.get(path, headers={"Authorization": f"Bearer {owner}"})
+        denied = client.get(path, headers={"Authorization": f"Bearer {other}"})
+        assert own.status_code == 200
+        assert own.json() == record
+        assert denied.status_code == 404
+        assert denied.json() == {"detail": "Predição não encontrada"}
 
 
-def test_extra_field_is_rejected(client):
+@pytest.mark.parametrize("body,error_type", [
+    ({"texto_cliente": "Preciso de ajuda", "admin": True}, "extra_forbidden"),
+    ({"texto_cliente": "Preciso de ajuda", "owner_id": 2}, "extra_forbidden"),
+    ({}, "missing"),
+    ({"texto_cliente": None}, "string_type"),
+    ({"texto_cliente": 123}, "string_type"),
+    ({"texto_cliente": "abcd"}, "string_too_short"),
+    ({"texto_cliente": "x" * 101}, "string_too_long"),
+], ids=["extra_admin", "extra_owner", "ausente", "nulo", "numero", "curto", "longo"])
+def test_invalid_input_is_rejected_without_persisting(client, body, error_type):
     alice = token(client, "alice", "alice-synthetic-password")
-    headers = {"Authorization": f"Bearer {alice}"}
-    response = client.post("/predict", json={"texto_cliente": "Preciso de ajuda", "admin": True}, headers=headers)
+    response = client.post("/predict", json=body, headers={"Authorization": f"Bearer {alice}"})
     assert response.status_code == 422
-    assert response.json()["detail"][0]["type"] == "extra_forbidden"
-    for body in ({}, {"texto_cliente": None}, {"texto_cliente": 123}, {"texto_cliente": "curto"[:4]}, {"texto_cliente": "x" * 101}):
-        assert client.post("/predict", json=body, headers=headers).status_code == 422
+    assert any(error["type"] == error_type for error in response.json()["detail"])
+    with Session(database.engine) as session:
+        assert session.exec(select(Prediction)).all() == []
+
+
+@pytest.mark.parametrize("length", [5, 100], ids=["minimo", "maximo"])
+def test_input_length_boundaries_are_accepted(client, length):
+    alice = token(client, "alice", "alice-synthetic-password")
+    response = client.post("/predict", json={"texto_cliente": "x" * length},
+                           headers={"Authorization": f"Bearer {alice}"})
+    assert response.status_code == 200
+    with Session(database.engine) as session:
+        stored = session.get(Prediction, response.json()["id"])
+        assert stored is not None
+        assert stored.texto_cliente == "x" * length
 
 
 def test_login_accepts_oauth2_form_and_rejects_extra_fields(client):
@@ -125,7 +217,7 @@ def test_rate_limit_ignores_forwarded_headers_when_proxy_headers_are_disabled(cl
     assert statuses == [401, 401, 401, 401, 401, 429]
 
 
-def test_headers_cors_and_rate_limit(client):
+def test_security_headers_and_cors(client):
     response = client.get("/health")
     assert response.headers["strict-transport-security"].startswith("max-age=")
     assert response.headers["x-frame-options"] == "DENY"
@@ -136,13 +228,6 @@ def test_headers_cors_and_rate_limit(client):
     denied = client.get("/health", headers={"Origin": "http://denied.example"})
     assert allowed.headers["access-control-allow-origin"] == "http://allowed.example"
     assert "access-control-allow-origin" not in denied.headers
-    for _ in range(5):
-        assert client.post("/auth/token", data={"username": "nobody", "password": "wrong"}).status_code == 401
-    limited = client.post("/auth/token", data={"username": "nobody", "password": "wrong"})
-    assert limited.status_code == 429
-    assert int(limited.headers["retry-after"]) > 0
-    assert limited.headers["x-frame-options"] == "DENY"
-    assert limited.headers["cross-origin-resource-policy"] == "same-origin"
     docs = client.get("/docs")
     assert "https://cdn.jsdelivr.net" in docs.headers["content-security-policy"]
 
@@ -152,3 +237,31 @@ def test_openapi_documents_authentication_and_ownership_errors(client):
     assert {"401", "429"} <= paths["/auth/token"]["post"]["responses"].keys()
     assert "401" in paths["/predict"]["post"]["responses"]
     assert {"401", "404"} <= paths["/predictions/{prediction_id}"]["get"]["responses"].keys()
+
+
+def test_rate_limit_blocks_and_recovers_after_window(client, monkeypatch):
+    # Substitui somente o relógio do módulo auth, sem alterar asyncio/time global.
+    now = [1000.0]
+    monkeypatch.setattr(auth, "time", SimpleNamespace(monotonic=lambda: now[0]))
+    form = {"username": "alice", "password": "wrong-password"}
+    for _ in range(5):
+        assert client.post("/auth/token", data=form).status_code == 401
+    valid = {"username": "alice", "password": "alice-synthetic-password"}
+    blocked = client.post("/auth/token", data=valid)
+    assert blocked.status_code == 429
+    assert int(blocked.headers["retry-after"]) > 0
+    assert blocked.headers["x-frame-options"] == "DENY"
+    assert blocked.headers["cross-origin-resource-policy"] == "same-origin"
+    now[0] += 59
+    assert client.post("/auth/token", data=valid).status_code == 429
+    now[0] += 1
+    assert client.post("/auth/token", data=valid).status_code == 200
+
+
+def test_rate_limit_isolated_by_connection_ip(client):
+    form = {"username": "nobody", "password": "wrong-password"}
+    for _ in range(5):
+        assert client.post("/auth/token", data=form).status_code == 401
+    assert client.post("/auth/token", data=form).status_code == 429
+    other_ip = APIClient(client_address=("203.0.113.50", 12345))
+    assert other_ip.post("/auth/token", data=form).status_code == 401
