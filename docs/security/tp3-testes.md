@@ -42,7 +42,7 @@ A tentativa no sandbox permaneceu na primeira requisição, e o diagnóstico de 
 
 Os testes enviam requisições HTTP à aplicação via transporte ASGI em processo, sem servidor TCP. O transporte atual não executa o lifespan; inicialização real, documentação renderizada no navegador, TLS e auditoria ZAP serão verificados no exercício 4. A aprovação não demonstra resistência a DoS, proteção distribuída do rate limiting, ausência de todas as vulnerabilidades nem cobertura estatística completa do código.
 
-No exercício 3, a mesma suíte será integrada ao GitHub Actions. Execução local aprovada não comprova execução remota ou bloqueio de merge.
+O [workflow do exercício 3](tp3-ci.md) integra a mesma suíte ao GitHub Actions. Execução local aprovada não comprova execução remota ou bloqueio de merge; veja o estado e as pendências no documento de CI.
 
 ## Fontes e uso de IA
 

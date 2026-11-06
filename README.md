@@ -8,6 +8,7 @@ API demonstrativa de atendimento para registrar uma intenção placeholder por m
 - [Relatório de EDA](docs/eda/tp2.md) e [notebook executado](notebooks/01_eda_ecomshield.ipynb)
 - [Regressão do TP3: resultados e reprodução](docs/eda/tp3-regressao.md) e [notebook executado](notebooks/02_regressao_ecomshield.ipynb)
 - [Fluxo de dados](docs/architecture/dfd.md), [ameaças](docs/security/stride.md), [mapa OWASP API Top 10](docs/security/owasp-api-top10.md) e [findings ZAP](docs/security/zap-findings.md)
+- [CI do TP3: workflow, validação e proteção de main](docs/security/tp3-ci.md)
 - [Glossário](docs/glossario.md) e [changelog](CHANGELOG.md)
 
 ## 🚀 Início rápido
@@ -57,4 +58,4 @@ A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento d
 - [OWASP API Security Top 10 de 2023](https://api-security.owasp.org/editions/2023/en/0x11-t10/)
 - [SQLModel: consultas filtradas](https://sqlmodel.tiangolo.com/tutorial/where/)
 - [OWASP ZAP: baseline passivo](https://www.zaproxy.org/docs/docker/baseline-scan/)
-- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 e 2 do TP3; os resultados informados nos artefatos vieram de execuções locais.
+- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 a 3 do TP3; os resultados informados nos artefatos vieram de execuções locais.

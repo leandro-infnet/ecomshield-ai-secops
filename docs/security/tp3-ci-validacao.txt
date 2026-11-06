@@ -1,0 +1,59 @@
+Validacao local do exercicio 3 — ambiente temporario limpo
+Instalacao: python -m pip install -r requirements.txt — codigo 0
+Consistencia: python -m pip check — No broken requirements found.
+Execucao: python -m pytest tests/ -v
+Caminhos locais substituidos por marcadores.
+
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.1.1, pluggy-1.7.0 -- <python-do-venv-temporario>
+cachedir: .pytest_cache
+rootdir: <copia-temporaria>
+plugins: anyio-4.14.2
+collecting ... collected 37 items
+
+tests/test_security.py::test_protected_routes_require_token[predict] PASSED [  2%]
+tests/test_security.py::test_protected_routes_require_token[consulta] PASSED [  5%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-arbitrary] PASSED [  8%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-expired] PASSED [ 10%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-tampered] PASSED [ 13%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-missing_exp] PASSED [ 16%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-missing_sub] PASSED [ 18%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-empty_sub] PASSED [ 21%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-unknown_user] PASSED [ 24%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[predict-wrong_algorithm] PASSED [ 27%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-arbitrary] PASSED [ 29%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-expired] PASSED [ 32%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-tampered] PASSED [ 35%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-missing_exp] PASSED [ 37%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-missing_sub] PASSED [ 40%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-empty_sub] PASSED [ 43%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-unknown_user] PASSED [ 45%]
+tests/test_security.py::test_protected_routes_reject_invalid_token[consulta-wrong_algorithm] PASSED [ 48%]
+tests/test_security.py::test_valid_login_creates_prediction_for_authenticated_owner PASSED [ 51%]
+tests/test_security.py::test_login_rejects_invalid_credentials[senha_incorreta] PASSED [ 54%]
+tests/test_security.py::test_login_rejects_invalid_credentials[usuario_inexistente] PASSED [ 56%]
+tests/test_security.py::test_prediction_ownership PASSED                 [ 59%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[extra_admin] PASSED [ 62%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[extra_owner] PASSED [ 64%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[ausente] PASSED [ 67%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[nulo] PASSED [ 70%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[numero] PASSED [ 72%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[curto] PASSED [ 75%]
+tests/test_security.py::test_invalid_input_is_rejected_without_persisting[longo] PASSED [ 78%]
+tests/test_security.py::test_input_length_boundaries_are_accepted[minimo] PASSED [ 81%]
+tests/test_security.py::test_input_length_boundaries_are_accepted[maximo] PASSED [ 83%]
+tests/test_security.py::test_login_accepts_oauth2_form_and_rejects_extra_fields PASSED [ 86%]
+tests/test_security.py::test_rate_limit_ignores_forwarded_headers_when_proxy_headers_are_disabled PASSED [ 89%]
+tests/test_security.py::test_security_headers_and_cors PASSED            [ 91%]
+tests/test_security.py::test_openapi_documents_authentication_and_ownership_errors PASSED [ 94%]
+tests/test_security.py::test_rate_limit_blocks_and_recovers_after_window PASSED [ 97%]
+tests/test_security.py::test_rate_limit_isolated_by_connection_ip PASSED [100%]
+
+============================== 37 passed in 6.50s ==============================
+
+Experimento de falha controlada, somente na copia temporaria:
+- Verificacao de expiracao JWT desativada na chamada jwt.decode.
+- Comando: python -m pytest tests/ -v -k 'protected_routes_reject_invalid_token and expired'
+- Resultado: 2 failed, 35 deselected in 0.57s; codigo de saida 1.
+- A copia foi restaurada ao final; o codigo da API do repositorio nao foi alterado.
+- Nao houve execucao do workflow remoto nem prova remota de bloqueio de merge.
