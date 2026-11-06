@@ -1,6 +1,6 @@
 # 🔄 TP3 — Integração contínua dos testes de segurança
 
-O [workflow Security Tests](../../.github/workflows/security-tests.yml) executa a suíte a cada push e pull request, em todas as branches. O destino definido para a integração do TP3 é **`main`**. A implementação e a validação local estão prontas; execução remota e proteção efetiva da branch continuam pendentes de comprovação.
+O [workflow Security Tests](../../.github/workflows/security-tests.yml) executa a suíte a cada push e pull request, em todas as branches. O destino definido para a integração do TP3 é **`main`**. **Exercício 3 concluído nas evidências registradas:** execução remota aprovada, proteção aplicada, regressão bloqueada e recuperação verificada. O [índice de evidências](../ci/index.md) reúne capturas, links das execuções e encerramento do PR temporário sem merge.
 
 ## Funcionamento
 
@@ -25,34 +25,30 @@ Não há publicação da aplicação neste exercício. A suíte usa dados sinté
 | `python -m pytest tests/ -v` nesse ambiente limpo | **37 passed in 6.50s** |
 | `python -m pip check` nesse ambiente | Nenhuma dependência inconsistente |
 | Desativar verificação de expiração JWT apenas na cópia temporária | **2 failed, 35 deselected**, código de saída **1**, nos dois casos de token expirado; cópia restaurada ao final |
-| Execução do workflow no GitHub | Pendente |
-| Check obrigatório e bloqueio de merge em `main` | Pendente |
+| Execução do workflow no GitHub | Aprovada em push e pull_request: 37 testes passaram após a restauração |
+| Check obrigatório e bloqueio de merge em `main` | Verificados no PR #13: falha de expiração JWT reprovou os checks Required e desabilitou o merge |
 
 A [evidência local sanitizada](tp3-ci-validacao.txt) contém o resultado da suíte limpa e o resumo do experimento de falha. A [matriz de testes](tp3-testes.md) explica os cenários exercitados. O parser temporário não é dependência do projeto. Não foram executados actionlint nem o runner do GitHub localmente; parsing YAML não substitui validação e execução pelo GitHub.
 
-O ambiente temporário não continha arquivos privados ou dataset. Os testes forneceram suas próprias variáveis de configuração. A instalação das dependências e as requisições ASGI foram executadas fora do sandbox restrito, conforme o diagnóstico do exercício 2. Isso não comprova que o runner remoto já executou.
+O ambiente temporário não continha arquivos privados ou dataset. Os testes forneceram suas próprias variáveis de configuração. A instalação das dependências e as requisições ASGI foram executadas fora do sandbox restrito, conforme o diagnóstico do exercício 2. Esses registros locais são complementados pelas capturas remotas do experimento, vinculadas no índice.
 
-## Ativação no GitHub e proteção de main
+## Configuração aplicada e prova remota
 
-Depois de publicar o workflow na `feat/tp3`:
+A regra de `main` exige PR e o check `security-tests` da origem GitHub Actions, com branch atualizada e sem bypass inclusive para administradores. Aprovação de outro revisor, force push e exclusão da branch estão desabilitados. A [sequência de capturas](../ci/index.md) documenta a configuração e seu efeito no PR #13.
 
-1. Abrir ou atualizar um PR **`feat/tp3` → `main`**, preferencialmente em rascunho enquanto o TP3 estiver em andamento. Conferir na aba Actions a execução de **Security Tests** para o commit atual e verificar `37 passed` no passo de testes.
-2. Nas configurações do repositório, acessar **Settings → Branches → Add classic branch protection rule**, ou editar a regra existente que se aplica a `main`. Preservar proteções já configuradas.
-3. Definir o padrão da branch como **`main`**, exigir pull request e habilitar **Require status checks to pass before merging**. Selecionar o check **`security-tests`**, proveniente do GitHub Actions. Ele poderá aparecer somente após a primeira execução. Se usar rulesets em vez de proteção clássica, aplicar o mesmo check a `main` e deixar o ruleset ativo.
-4. Aplicar as restrições também a administradores, pela opção **Do not allow bypassing the above settings**, ou ausência de bypass no ruleset. Não habilitar force push ou exclusão da branch. Não é necessário exigir aprovação de outro revisor para este exercício individual.
-5. Salvar a regra. Em PR temporário autorizado, comprovar que uma falha de teste deixa o job vermelho e impede o merge. Manter esse PR sem merge; corrigir a falha e verificar o novo check antes de qualquer integração. A falha controlada local desta etapa não substitui essa prova remota.
+O aluno criou a branch temporária `ci/validar-bloqueio-tp3` a partir da `feat/tp3` e abriu o [PR #13 para main](https://github.com/leandro-infnet/ecomshield-ai-secops/pull/13). No commit `6bae619`, desativou exclusivamente a verificação de expiração JWT para provocar uma regressão controlada. Os dois casos de token expirado falharam; os outros 35 passaram. Tanto o evento push quanto pull_request terminaram com código 1. O PR mostrou os checks como Required e o merge desabilitado.
 
-Não usar `pull_request_target` para executar código proposto nem conceder tokens de escrita ao job. As proteções dependem das permissões e dos recursos disponíveis no repositório; se a configuração não estiver disponível, registrar o impedimento e manter o requisito pendente.
+No commit `8e7fb7e`, a validação foi restaurada. As novas execuções passaram com **37 testes**, em 11,76 s no push e 10,56 s no pull_request. Os checks voltaram a aprovar, e o PR foi **fechado sem merge**, conforme a captura final. Links de runs, jobs e imagens têm fonte principal no [índice de evidências](../ci/index.md), evitando duplicação de identificadores.
 
-## Evidências necessárias para fechar o exercício
+## Limites e manutenção
 
-Registrar o link da execução aprovada e seu commit, o link do PR, evidência da regra aplicada a `main` com `security-tests` obrigatório e evidência de merge bloqueado para um check reprovado. Não incluir tokens, credenciais ou arquivos privados nas capturas. Não considerar o exercício integralmente concluído antes de obter as evidências remotas.
+A consolidação confere as capturas fornecidas pelo aluno; não representa nova execução do agente nem consulta autenticada do estado atual. O PR e a execução consultados não puderam ser abertos pela ferramenta de navegação. As evidências são suficientes para o requisito acadêmico exercitado, sem afirmar cobertura de todas as formas de contorno, auditoria completa da API ou deployment.
 
-Nesta etapa, não foram realizados commit, push, abertura de PR nem alteração das configurações remotas.
+Manter o nome do job e a exigência do check na proteção de `main`. Mudanças no workflow ou na regra exigem nova conferência do vínculo. Não usar `pull_request_target` para executar código proposto nem conceder tokens de escrita ao job. O experimento de falha foi encerrado e não deve ser integrado ao PR principal do TP3.
 
 ## Fontes e uso de IA
 
 - [GitHub Docs: testes Python no Actions](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
 - [GitHub Docs: proteção de branches e checks obrigatórios](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
 - [Action oficial checkout](https://github.com/actions/checkout) e [action oficial setup-python](https://github.com/actions/setup-python).
-- Codex (OpenAI) auxiliou na configuração do workflow, na validação em ambiente limpo, no experimento local de falha e na documentação. Execução remota e bloqueio de merge não foram presumidos a partir dos resultados locais.
+- Codex (OpenAI) auxiliou na configuração do workflow, na validação em ambiente limpo, no experimento local de falha e na documentação. As operações remotas e capturas foram realizadas pelo aluno e revisadas na consolidação; execução remota e bloqueio de merge estão documentados separadamente dos resultados locais.

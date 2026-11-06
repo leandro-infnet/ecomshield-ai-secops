@@ -2,7 +2,7 @@
 
 ## 📊 Ainda não publicado — TP3
 
-- Exercício 3: workflow de segurança em push e pull request, Python 3.14 e job `security-tests`; instalação e testes verificados em ambiente limpo, com orientações para proteger `main`. Execução e bloqueio de merge remotos ainda pendentes.
+- Exercício 3: workflow de segurança em push e pull request, Python 3.14 e job `security-tests`; instalação e testes verificados em ambiente limpo, com proteção de `main`. Evidências remotas consolidadas de falha controlada, bloqueio de merge, recuperação dos 37 testes e fechamento do PR temporário sem integração.
 
 - Exercício 2: suíte de segurança ampliada para 37 casos, com autenticação nas duas rotas protegidas, BOLA nos dois sentidos, validação sem persistência indevida e recuperação do rate limiting; matriz de cobertura e evidência sanitizada da execução.
 
