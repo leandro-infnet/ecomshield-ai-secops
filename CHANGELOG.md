@@ -1,5 +1,11 @@
 # 📝 Changelog
 
+## 📊 Ainda não publicado — TP3
+
+- Exercício 1: notebook de regressão simples e múltipla com divisão por grupos de textos, baseline da média, R², RMSE, residual plots e Q-Q plots.
+- Resultados reproduzíveis em JSON, figura exportada e discussão das limitações da regressão para classificar intenções.
+- Dependências de scikit-learn adicionadas sem atualização das dependências anteriores.
+
 ## 📦 Ainda não publicado — TP2
 
 - API com validação JWT, armazenamento SQLModel, consulta de predição por proprietário, cabeçalhos HTTP, CORS e limite de tentativas de login.
