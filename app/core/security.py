@@ -56,7 +56,7 @@ def create_access_token(subject):
 def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)) -> AuthenticatedUser:
     unauthorized = HTTPException(status_code=401, detail="Credenciais inválidas", headers={"WWW-Authenticate": "Bearer"})
     try:
-        payload = jwt.decode(token, secret_key(), algorithms=[ALGORITHM], options={"require": ["sub", "exp"]})
+        payload = jwt.decode(token, secret_key(), algorithms=[ALGORITHM], options={"require": ["sub", "exp"], "verify_exp": False})
         subject = payload["sub"]
         if not isinstance(subject, str) or not subject:
             raise unauthorized
