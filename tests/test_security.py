@@ -1,5 +1,7 @@
 import os
 import asyncio
+import re
+from html.parser import HTMLParser
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
@@ -233,7 +235,22 @@ def test_security_headers_and_cors(client):
 
 
 def test_openapi_documents_authentication_and_ownership_errors(client):
-    paths = client.get("/openapi.json").json()["paths"]
+    schema = client.get("/openapi.json").json()
+    paths = schema["paths"]
+    expected = {"/health": "get", "/auth/token": "post", "/predict": "post", "/predictions/{prediction_id}": "get"}
+    assert set(paths) == set(expected)
+    for path, method in expected.items():
+        operation = paths[path][method]
+        assert operation["description"]
+        assert "$ref" in operation["responses"]["200"]["content"]["application/json"]["schema"]
+    assert "application/x-www-form-urlencoded" in paths["/auth/token"]["post"]["requestBody"]["content"]
+    assert "application/json" in paths["/predict"]["post"]["requestBody"]["content"]
+    for path, method in [("/predict", "post"), ("/predictions/{prediction_id}", "get")]:
+        assert paths[path][method]["security"] == [{"OAuth2PasswordBearer": []}]
+    assert paths["/auth/token"]["post"]["responses"]["429"]["headers"]["Retry-After"]
+    health = client.get("/health")
+    assert health.status_code == 200
+    assert health.json() == {"status": "ok", "servico": "E-ComShield API operacional"}
     assert {"401", "429"} <= paths["/auth/token"]["post"]["responses"].keys()
     assert "401" in paths["/predict"]["post"]["responses"]
     assert {"401", "404"} <= paths["/predictions/{prediction_id}"]["get"]["responses"].keys()
@@ -265,3 +282,35 @@ def test_rate_limit_isolated_by_connection_ip(client):
     assert client.post("/auth/token", data=form).status_code == 429
     other_ip = APIClient(client_address=("203.0.113.50", 12345))
     assert other_ip.post("/auth/token", data=form).status_code == 401
+
+
+@pytest.mark.parametrize("path", ["/docs", "/redoc"], ids=["swagger", "redoc"])
+def test_documentation_uses_matching_nonce_and_asset_integrity(client, path):
+    response = client.get(path)
+    assert response.status_code == 200
+    policy = response.headers["content-security-policy"]
+    assert "unsafe-inline" not in policy
+    assert "base-uri 'none'" in policy
+    assert "form-action 'self'" in policy
+    nonce = re.search(r"script-src 'nonce-([^']+)'", policy)
+    assert nonce is not None
+    tags = []
+
+    class Tags(HTMLParser):
+        def handle_starttag(self, tag, attrs):
+            tags.append((tag, dict(attrs)))
+
+    Tags().feed(response.text)
+    scripts = [attrs for tag, attrs in tags if tag == "script"]
+    assert scripts
+    assert all(attrs.get("nonce") == nonce[1] for attrs in scripts)
+    external = [attrs for attrs in scripts if "src" in attrs]
+    external += [attrs for tag, attrs in tags if tag == "link" and attrs.get("rel") == "stylesheet"]
+    assert external
+    for attrs in external:
+        assert attrs["integrity"].startswith("sha384-")
+        assert attrs["crossorigin"] == "anonymous"
+        assert re.search(r"@\d+\.\d+\.\d+/", attrs.get("src", attrs.get("href", "")))
+    another_policy = client.get(path).headers["content-security-policy"]
+    assert nonce[1] not in another_policy
+    assert response.headers["cache-control"] == "no-store"

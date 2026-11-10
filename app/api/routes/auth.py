@@ -9,7 +9,7 @@ from sqlmodel import Session, select
 from app.core.security import create_access_token, verify_password
 from app.db.database import get_session
 from app.db.models import User
-from app.models.schemas import LoginRequest, Token
+from app.models.schemas import ErrorResponse, LoginRequest, Token
 
 router = APIRouter()
 _attempts: dict[str, deque[float]] = defaultdict(deque)
@@ -33,8 +33,11 @@ def check_rate_limit(request: Request):
 
 @router.post(
     "/auth/token", response_model=Token, summary="Gera token JWT",
+    description="Recebe formulário OAuth2 de usuário e senha. Cinco tentativas por IP de conexão em 60 segundos; a sexta retorna 429. Não concede escopos ou autentica aplicações clientes.",
     dependencies=[Depends(check_rate_limit)],
-    responses={401: {"description": "Credenciais inválidas"}, 429: {"description": "Limite de tentativas excedido"}},
+    responses={401: {"description": "Credenciais inválidas", "model": ErrorResponse},
+               429: {"description": "Limite de tentativas excedido", "model": ErrorResponse,
+                     "headers": {"Retry-After": {"description": "Segundos até nova tentativa", "schema": {"type": "integer"}}}}},
 )
 def login_for_access_token(
     form_data: Annotated[LoginRequest, Form()],

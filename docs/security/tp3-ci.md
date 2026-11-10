@@ -2,6 +2,8 @@
 
 O [workflow Security Tests](../../.github/workflows/security-tests.yml) executa a suíte a cada push e pull request, em todas as branches. O destino definido para a integração do TP3 é **`main`**. **Exercício 3 concluído nas evidências registradas:** execução remota aprovada, proteção aplicada, regressão bloqueada e recuperação verificada. O [índice de evidências](../ci/index.md) reúne capturas, links das execuções e encerramento do PR temporário sem merge.
 
+Os resultados remotos de 37 casos nesta página pertencem aos exercícios 1–3. A [auditoria final do exercício 4](tp3-auditoria-final.md) acrescentou dois casos de documentação; após publicar essa alteração, o mesmo workflow executará os 39 casos atuais.
+
 ## Funcionamento
 
 Integração contínua (CI, Continuous Integration) é a execução automática de verificações sobre alterações do código. Aqui, um único job, **`security-tests`**, usa runner `ubuntu-latest`, configura Python 3.14, instala `requirements.txt` e executa:

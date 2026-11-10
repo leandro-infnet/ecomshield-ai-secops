@@ -1,0 +1,28 @@
+{
+  "title": "E-ComShield API - Swagger UI",
+  "operations": [
+    "/health",
+    "/auth/token",
+    "/predict",
+    "/predictions/{prediction_id}"
+  ],
+  "authorize": true,
+  "schemas": true,
+  "swagger": true,
+  "authorize_dialog_loaded": true,
+  "try_out_health_status": "200",
+  "logs": [
+    {
+      "level": "verbose",
+      "source": "recommendation",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "level": "verbose",
+      "source": "recommendation",
+      "text": "[DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o",
+      "url": "http://127.0.0.1:18081/docs"
+    }
+  ]
+}

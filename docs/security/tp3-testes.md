@@ -1,6 +1,6 @@
 # 🔒 TP3 — Testes de segurança da API
 
-O exercício 2 está coberto pela [suíte pytest](../../tests/test_security.py): **37 casos aprovados, em 13 funções de teste**, abrangendo autenticação, autorização por proprietário, validação de entradas e rate limiting. A [saída sanitizada da execução](tp3-pytest.txt) registra `37 passed in 6.97s`. Os casos parametrizados aparecem individualmente no resultado para facilitar o diagnóstico.
+O exercício 2 foi consolidado com **37 casos aprovados em 13 funções**, abrangendo autenticação, autorização por proprietário, validação de entradas e rate limiting. No exercício 4, a [suíte pytest](../../tests/test_security.py) passou a **39 casos em 14 funções**, acrescentando proteção das interfaces de documentação. A [saída final](tp3/pytest.txt) registra 39 passed in 6.92s; o relatório abaixo preserva também a evidência histórica do exercício 2. A [saída sanitizada da execução](tp3-pytest.txt) registra `37 passed in 6.97s`. Os casos parametrizados aparecem individualmente no resultado para facilitar o diagnóstico.
 
 ## Cenários e resultados esperados
 
@@ -18,6 +18,7 @@ O exercício 2 está coberto pela [suíte pytest](../../tests/test_security.py):
 | Headers e CORS | `test_security_headers_and_cors` | 1 | Resposta inclui headers previstos; só a origem permitida recebe liberação CORS; CSP específica está presente em /docs |
 | Contrato OpenAPI | `test_openapi_documents_authentication_and_ownership_errors` | 1 | Respostas 401, 404 e 429 pertinentes estão declaradas no schema |
 | Bloqueio e recuperação | `test_rate_limit_blocks_and_recovers_after_window` | 1 | Cinco falhas de login são permitidas; a sexta tentativa, mesmo com senha correta, recebe 429 e Retry-After; continua bloqueada aos 59 s e libera aos 60 s |
+| CSP e integridade da documentação | `test_documentation_uses_matching_nonce_and_asset_integrity` | 2 | Swagger e ReDoc têm nonce correspondente ao HTML, valor diferente a cada resposta, assets fixados com SRI e cache desabilitado |
 | Isolamento por IP | `test_rate_limit_isolated_by_connection_ip` | 1 | O bloqueio de um IP não impede a primeira tentativa de outro IP |
 
 BOLA (Broken Object Level Authorization) é uma falha de autorização em que um usuário acessa um objeto de outro ao trocar seu identificador. A verificação usa recursos existentes e confirma também o acesso do dono, evitando confundir proteção com uma rota que nega tudo. Conceitos adicionais estão no [glossário](../glossario.md).
@@ -40,7 +41,7 @@ A tentativa no sandbox permaneceu na primeira requisição, e o diagnóstico de 
 
 ## Limites da evidência e continuidade
 
-Os testes enviam requisições HTTP à aplicação via transporte ASGI em processo, sem servidor TCP. O transporte atual não executa o lifespan; inicialização real, documentação renderizada no navegador, TLS e auditoria ZAP serão verificados no exercício 4. A aprovação não demonstra resistência a DoS, proteção distribuída do rate limiting, ausência de todas as vulnerabilidades nem cobertura estatística completa do código.
+Os testes enviam requisições HTTP à aplicação via transporte ASGI em processo, sem servidor TCP. O transporte atual não executa o lifespan; inicialização real, documentação renderizada no navegador e auditoria ZAP foram verificados separadamente na [auditoria final do exercício 4](tp3-auditoria-final.md). TLS permanece fora do ambiente HTTP local. A aprovação não demonstra resistência a DoS, proteção distribuída do rate limiting, ausência de todas as vulnerabilidades nem cobertura estatística completa do código.
 
 O [workflow do exercício 3](tp3-ci.md) integra a mesma suíte ao GitHub Actions. A [sequência de evidências remotas](../ci/index.md) demonstra a falha controlada dos testes de expiração, o bloqueio do merge e a recuperação após restaurar a validação, complementando a execução local deste exercício.
 

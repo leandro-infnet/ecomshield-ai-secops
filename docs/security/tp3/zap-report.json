@@ -1,0 +1,185 @@
+{
+  "@programName": "ZAP",
+  "@version": "2.17.0",
+  "@generated": "Tue, 10 Nov 2026 00:22:45",
+  "created": "2026-11-10T00:22:45.246017615Z",
+  "insights": [
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.code.2xx",
+      "description": "Percentage of responses with status code 2xx",
+      "statistic": "52"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.code.4xx",
+      "description": "Percentage of responses with status code 4xx",
+      "statistic": "47"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.endpoint.ctype.application/json",
+      "description": "Percentage of endpoints with content type application/json",
+      "statistic": "80"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.endpoint.ctype.text/html",
+      "description": "Percentage of endpoints with content type text/html",
+      "statistic": "20"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.endpoint.method.GET",
+      "description": "Percentage of endpoints with method GET",
+      "statistic": "60"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.endpoint.method.POST",
+      "description": "Percentage of endpoints with method POST",
+      "statistic": "40"
+    },
+    {
+      "level": "Info",
+      "reason": "Informational",
+      "site": "http://127.0.0.1:18081",
+      "key": "insight.endpoint.total",
+      "description": "Count of total endpoints",
+      "statistic": "10"
+    }
+  ],
+  "site": [
+    {
+      "@name": "http://127.0.0.1:18081",
+      "@host": "127.0.0.1",
+      "@port": "18081",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10111",
+          "alertRef": "10111",
+          "alert": "Authentication Request Identified",
+          "name": "Authentication Request Identified",
+          "riskcode": "0",
+          "confidence": "1",
+          "riskdesc": "Informational (Low)",
+          "desc": "<p>The given request has been identified as an authentication request. The 'Other Info' field contains a set of key=value lines which identify any relevant fields. If the request is in a context which has an Authentication Method set to \"Auto-Detect\" then this rule will change the authentication to match the request identified.</p>",
+          "instances": [
+            {
+              "id": "6",
+              "uri": "http://127.0.0.1:18081/auth/token",
+              "nodeName": "http://127.0.0.1:18081/auth/token ()(admin,password,username)",
+              "method": "POST",
+              "param": "username",
+              "attack": "",
+              "evidence": "password",
+              "otherinfo": "userParam=username\nuserValue=alice\npasswordParam=password"
+            },
+            {
+              "id": "2",
+              "uri": "http://127.0.0.1:18081/auth/token",
+              "nodeName": "http://127.0.0.1:18081/auth/token ()(password,username)",
+              "method": "POST",
+              "param": "username",
+              "attack": "",
+              "evidence": "password",
+              "otherinfo": "userParam=username\nuserValue=bob\npasswordParam=password"
+            }
+          ],
+          "count": "2",
+          "systemic": false,
+          "solution": "<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>",
+          "otherinfo": "<p>userParam=username</p><p>userValue=alice</p><p>passwordParam=password</p>",
+          "reference": "<p>https://www.zaproxy.org/docs/desktop/addons/authentication-helper/auth-req-id/</p>",
+          "cweid": "-1",
+          "wascid": "-1",
+          "sourceid": "21"
+        },
+        {
+          "pluginid": "10109",
+          "alertRef": "10109",
+          "alert": "Modern Web Application",
+          "name": "Modern Web Application",
+          "riskcode": "0",
+          "confidence": "2",
+          "riskdesc": "Informational (Medium)",
+          "desc": "<p>The application appears to be a modern web application. If you need to explore it automatically then the Client Spider may well be more effective than the standard one.</p>",
+          "instances": [
+            {
+              "id": "0",
+              "uri": "http://127.0.0.1:18081/docs",
+              "nodeName": "http://127.0.0.1:18081/docs",
+              "method": "GET",
+              "param": "",
+              "attack": "",
+              "evidence": "<script nonce=\"qsNgSSO5n9vkQOCWsG7u9v78y2qfBl9H\" src=\"https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/swagger-ui-bundle.js\" integrity=\"sha384-XFYN47VzPiDY6qPtxYKg0nqUeW/upo20xf1j2SUE7gT/i35FJB4cuS/71Iegzk8Z\" crossorigin=\"anonymous\"></script>",
+              "otherinfo": "No links have been found while there are scripts, which is an indication that this is a modern web application."
+            },
+            {
+              "id": "1",
+              "uri": "http://127.0.0.1:18081/redoc",
+              "nodeName": "http://127.0.0.1:18081/redoc",
+              "method": "GET",
+              "param": "",
+              "attack": "",
+              "evidence": "<script nonce=\"D-mIzMOFnSDetLIWRXM01RyfdDw4RTih\" src=\"https://cdn.jsdelivr.net/npm/redoc@2.5.4/bundles/redoc.standalone.js\" integrity=\"sha384-w447zOpYfw/1Tv/5AK9NfHTlQIqE3RVR6KY62jCyy9zNDgO64cMwGGP1Fj0zJVf5\" crossorigin=\"anonymous\"> </script>",
+              "otherinfo": "No links have been found while there are scripts, which is an indication that this is a modern web application."
+            }
+          ],
+          "count": "2",
+          "systemic": false,
+          "solution": "<p>This is an informational alert and so no changes are required.</p>",
+          "otherinfo": "<p>No links have been found while there are scripts, which is an indication that this is a modern web application.</p>",
+          "reference": "",
+          "cweid": "-1",
+          "wascid": "-1",
+          "sourceid": "3"
+        },
+        {
+          "pluginid": "10112",
+          "alertRef": "10112",
+          "alert": "Session Management Response Identified",
+          "name": "Session Management Response Identified",
+          "riskcode": "0",
+          "confidence": "3",
+          "riskdesc": "Informational (High)",
+          "desc": "<p>The given response has been identified as containing a session management token. The 'Other Info' field contains a set of header tokens that can be used in the Header Based Session Management Method. If the request is in a context which has a Session Management Method set to \"Auto-Detect\" then this rule will change the session management to use the tokens identified.</p>",
+          "instances": [
+            {
+              "id": "4",
+              "uri": "http://127.0.0.1:18081/auth/token",
+              "nodeName": "http://127.0.0.1:18081/auth/token ()(password,username)",
+              "method": "POST",
+              "param": "access_token",
+              "attack": "",
+              "evidence": "access_token",
+              "otherinfo": "json:access_token"
+            }
+          ],
+          "count": "1",
+          "systemic": false,
+          "solution": "<p>This is an informational alert rather than a vulnerability and so there is nothing to fix.</p>",
+          "otherinfo": "<p>json:access_token</p>",
+          "reference": "<p>https://www.zaproxy.org/docs/desktop/addons/authentication-helper/session-mgmt-id/</p>",
+          "cweid": "-1",
+          "wascid": "-1",
+          "sourceid": "6"
+        }
+      ]
+    }
+  ],
+  "sequences": []
+}

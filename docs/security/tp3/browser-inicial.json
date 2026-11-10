@@ -1,0 +1,26 @@
+{
+  "title": "E-ComShield API - Swagger UI",
+  "operations": [
+    "/health",
+    "/auth/token",
+    "/predict",
+    "/predictions/{prediction_id}"
+  ],
+  "authorize": true,
+  "schemas": true,
+  "swagger": false,
+  "logs": [
+    {
+      "level": "error",
+      "source": "security",
+      "text": "Loading the image 'https://fastapi.tiangolo.com/img/favicon.png' violates the following Content Security Policy directive: \"img-src 'self' data:\". The action has been blocked.",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "level": "error",
+      "source": "security",
+      "text": "Loading the image 'https://fastapi.tiangolo.com/img/favicon.png' violates the following Content Security Policy directive: \"img-src 'self' data:\". The action has been blocked.",
+      "url": "http://127.0.0.1:18081/docs"
+    }
+  ]
+}

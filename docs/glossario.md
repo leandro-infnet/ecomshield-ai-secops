@@ -23,3 +23,8 @@
 - **Q-Q plot — Quantile-Quantile plot (Gráfico Quantil-Quantil):** comparação de quantis de duas distribuições; aqui, resíduos padronizados contra referência normal.
 - **Homocedasticidade:** variância aproximadamente constante dos erros ao longo das condições avaliadas.
 - **Vazamento de dados:** uso, no ajuste ou seleção, de informação que deveria ficar reservada à avaliação; textos repetidos entre treino e teste podem tornar a estimativa de generalização otimista.
+
+- **CSP — Content Security Policy (Política de Segurança de Conteúdo):** política do navegador que limita as origens e formas de execução de recursos; precisa ser compatível com as interfaces que protege.
+- **Nonce de CSP:** valor aleatório novo por resposta que autoriza os scripts ou estilos correspondentes no HTML; não é token de autenticação.
+- **SRI — Subresource Integrity (Integridade de Sub-recurso):** hash declarado no HTML para o navegador conferir o conteúdo de um asset externo antes de utilizá-lo.
+- **OpenAPI:** especificação dos endpoints, contratos e mecanismos de autenticação HTTP; Swagger UI e ReDoc são interfaces que a apresentam.
