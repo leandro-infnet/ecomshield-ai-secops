@@ -28,3 +28,7 @@
 - **Nonce de CSP:** valor aleatório novo por resposta que autoriza os scripts ou estilos correspondentes no HTML; não é token de autenticação.
 - **SRI — Subresource Integrity (Integridade de Sub-recurso):** hash declarado no HTML para o navegador conferir o conteúdo de um asset externo antes de utilizá-lo.
 - **OpenAPI:** especificação dos endpoints, contratos e mecanismos de autenticação HTTP; Swagger UI e ReDoc são interfaces que a apresentam.
+
+- **Aprendizado supervisionado:** aprendizagem de uma relação entre entradas e alvos conhecidos, como mensagem e intenção, para prever o alvo de novas entradas.
+- **Classificação multiclasse de rótulo único:** escolha de uma classe entre várias possibilidades, atribuindo um único rótulo a cada entrada.
+- **Macro-F1:** média do F1 calculado separadamente para cada classe, atribuindo o mesmo peso às classes; F1 combina precisão e recall pela média harmônica.

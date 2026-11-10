@@ -7,6 +7,7 @@ API demonstrativa de atendimento para registrar uma intenção placeholder por m
 - [Resumo técnico do TP2](docs/tp2-relatorio.md)
 - [Relatório de EDA](docs/eda/tp2.md) e [notebook executado](notebooks/01_eda_ecomshield.ipynb)
 - [Regressão do TP3: resultados e reprodução](docs/eda/tp3-regressao.md) e [notebook executado](notebooks/02_regressao_ecomshield.ipynb)
+- [Pergunta de classificação e distribuição das 27 intenções](docs/classificacao-tp3.md)
 - [Fluxo de dados](docs/architecture/dfd.md), [ameaças](docs/security/stride.md), [mapa OWASP API Top 10](docs/security/owasp-api-top10.md) e [findings ZAP](docs/security/zap-findings.md)
 - [Auditoria final do TP3 e reprodução do ambiente sintético](docs/security/tp3-auditoria-final.md)
 - [CI do TP3: workflow, validação e proteção de main](docs/security/tp3-ci.md) e [evidências remotas de bloqueio e recuperação](docs/ci/index.md)
@@ -59,4 +60,4 @@ A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento d
 - [OWASP API Security Top 10 de 2023](https://api-security.owasp.org/editions/2023/en/0x11-t10/)
 - [SQLModel: consultas filtradas](https://sqlmodel.tiangolo.com/tutorial/where/)
 - [OWASP ZAP: baseline passivo](https://www.zaproxy.org/docs/docker/baseline-scan/)
-- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 a 4 do TP3; os artefatos distinguem execuções locais e evidências remotas do GitHub fornecidas pelo aluno.
+- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 a 5 do TP3; os artefatos distinguem execuções locais e evidências remotas do GitHub fornecidas pelo aluno.
