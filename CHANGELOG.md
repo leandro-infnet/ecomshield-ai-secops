@@ -2,6 +2,8 @@
 
 ## 📊 Ainda não publicado — TP3
 
+- Exercício 6: plano técnico T2 com TF-IDF, regressão logística, alternativa SVM, separação por grupos, avaliação e integração futura. Acordo com colega adversário, URL/IP e confirmação de acesso permanecem pendentes. Consolidação dos seis exercícios com matriz dos 12 itens da rubrica e limites das evidências.
+
 - Exercício 5: pergunta de classificação formalizada, com descrições e distribuição das 27 intenções, contagens agregadas em CSV e justificativa do aprendizado supervisionado; limites de idioma, ambiguidades e vazamento documentados.
 
 - Exercício 4: schemas OpenAPI completos, CSP por nonce e SRI nas interfaces; findings Medium corrigidos e revalidados em auditoria ZAP passiva autenticada, com zero High/Medium/Low no reteste. Ambiente sintético reproduzível e suíte ampliada para 39 casos.

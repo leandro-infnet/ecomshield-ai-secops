@@ -32,3 +32,8 @@
 - **Aprendizado supervisionado:** aprendizagem de uma relação entre entradas e alvos conhecidos, como mensagem e intenção, para prever o alvo de novas entradas.
 - **Classificação multiclasse de rótulo único:** escolha de uma classe entre várias possibilidades, atribuindo um único rótulo a cada entrada.
 - **Macro-F1:** média do F1 calculado separadamente para cada classe, atribuindo o mesmo peso às classes; F1 combina precisão e recall pela média harmônica.
+- **TF-IDF — Term Frequency–Inverse Document Frequency (Frequência do Termo–Inverso da Frequência nos Documentos):** representação numérica que pondera a frequência de termos e reduz o peso dos mais disseminados no corpus.
+- **Regressão logística:** classificador que estima probabilidades de classes a partir dos atributos; apesar do nome, não é regressão de um alvo contínuo.
+- **SVM — Support Vector Machine (Máquina de Vetores de Suporte):** família de modelos que separa classes por fronteiras aprendidas com base em margens; a alternativa linear do plano opera sobre vetores TF-IDF.
+- **Separação estratificada por grupos:** divisão que busca preservar a proporção de classes mantendo cada grupo inteiro em uma partição; usada no plano para evitar cópias da mensagem entre treino e teste.
+- **Calibração de probabilidades:** ajuste que busca aproximar probabilidades estimadas das frequências observadas; uma pontuação alta não garante, por si, essa correspondência.
