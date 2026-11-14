@@ -1,0 +1,18 @@
+{
+  "imagem_zap": "ghcr.io/zaproxy/zaproxy@sha256:5ccfff9a411743ab2615136a2edd7416bec9ce41572fa94e935df38c14adb2b6",
+  "chromium": "156.0.8078.79",
+  "assets": {
+    "swagger-ui-bundle.js": {
+      "url": "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/swagger-ui-bundle.js",
+      "integrity": "sha384-XFYN47VzPiDY6qPtxYKg0nqUeW/upo20xf1j2SUE7gT/i35FJB4cuS/71Iegzk8Z"
+    },
+    "swagger-ui.css": {
+      "url": "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.34.1/swagger-ui.css",
+      "integrity": "sha384-4c3vsE5f+trhFyHrFrLM1fFGUn531NIaC7dcqEWIJdoRQJ5CkJbSuSCwXLpaS1KF"
+    },
+    "bundles/redoc.standalone.js": {
+      "url": "https://cdn.jsdelivr.net/npm/redoc@2.5.4/bundles/redoc.standalone.js",
+      "integrity": "sha384-w447zOpYfw/1Tv/5AK9NfHTlQIqE3RVR6KY62jCyy9zNDgO64cMwGGP1Fj0zJVf5"
+    }
+  }
+}

@@ -2,7 +2,7 @@
 
 ## Problema
 
-O E-ComShield pretende classificar a intenção de mensagens de atendimento no TP3. Este relatório investiga a distribuição dos rótulos, o comprimento dos textos e a hipótese do TP1 de que mensagens de reclamação ou contato com atendimento são mais curtas. A análise é exploratória; nenhum classificador foi treinado.
+O E-ComShield pretende classificar a intenção de mensagens de atendimento na fase preditiva (T2). Este relatório investiga a distribuição dos rótulos, o comprimento dos textos e a hipótese do TP1 de que mensagens de reclamação ou contato com atendimento são mais curtas. A análise é exploratória; nenhum classificador foi treinado.
 
 ## 🗂️ Dados
 
@@ -30,7 +30,7 @@ O resultado foi $U=28.909.189{,}5$ e $p=1{,}0$ (arredondado). Logo, não rejeita
 ## 💡 Insights principais
 
 1. O teste não corroborou a hipótese de mensagens de reclamação/contato mais curtas. O boxplot isolado do TP1 não bastava para inferir essa tendência.
-2. Comprimento de caracteres e palavras são redundantes em parte. Na classificação do TP3, avaliar sua contribuição incremental será mais útil do que presumir poder preditivo pela correlação.
+2. Comprimento de caracteres e palavras são redundantes em parte. Na futura classificação, avaliar sua contribuição incremental será mais útil do que presumir poder preditivo pela correlação.
 3. A presença de textos repetidos requer divisão cuidadosa antes de medir desempenho. Balanceamento aproximado de classes no dataset não garante precisão em produção.
 
 ## Limitações
@@ -39,7 +39,7 @@ O dataset pode conter templates e não representar a distribuição de mensagens
 
 ## 🧭 Próximos passos
 
-No TP3, definir divisão estratificada que mantenha textos idênticos ou templates no mesmo conjunto, construir baseline de classificação de `intent`, medir precisão, recall e F1 por classe e analisar erros em mensagens curtas e longas. Rever o limite de entrada com dados de operação autorizados antes de uso real.
+No TP3, estudar regressão com alvo numérico derivado e planejar a classificação. Na fase preditiva (T2), definir divisão estratificada que mantenha textos idênticos ou templates no mesmo conjunto, construir baseline de classificação de `intent`, medir precisão, recall e F1 por classe e analisar erros em mensagens curtas e longas. Rever o limite de entrada com dados de operação autorizados antes de uso real.
 
 ## Fontes e uso de IA
 

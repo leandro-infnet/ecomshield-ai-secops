@@ -1,5 +1,21 @@
 # 📝 Changelog
 
+## 📊 Ainda não publicado — TP3
+
+- Exercício 6: plano técnico T2 com TF-IDF, regressão logística, alternativa SVM, separação por grupos, avaliação e integração futura. Acordo com colega adversário, URL/IP e confirmação de acesso permanecem pendentes. Consolidação dos seis exercícios com matriz dos 12 itens da rubrica e limites das evidências.
+
+- Exercício 5: pergunta de classificação formalizada, com descrições e distribuição das 27 intenções, contagens agregadas em CSV e justificativa do aprendizado supervisionado; limites de idioma, ambiguidades e vazamento documentados.
+
+- Exercício 4: schemas OpenAPI completos, CSP por nonce e SRI nas interfaces; findings Medium corrigidos e revalidados em auditoria ZAP passiva autenticada, com zero High/Medium/Low no reteste. Ambiente sintético reproduzível e suíte ampliada para 39 casos.
+
+- Exercício 3: workflow de segurança em push e pull request, Python 3.14 e job `security-tests`; instalação e testes verificados em ambiente limpo, com proteção de `main`. Evidências remotas consolidadas de falha controlada, bloqueio de merge, recuperação dos 37 testes e fechamento do PR temporário sem integração.
+
+- Exercício 2: suíte de segurança ampliada para 37 casos, com autenticação nas duas rotas protegidas, BOLA nos dois sentidos, validação sem persistência indevida e recuperação do rate limiting; matriz de cobertura e evidência sanitizada da execução.
+
+- Exercício 1: notebook de regressão simples e múltipla com divisão por grupos de textos, baseline da média, R², RMSE, residual plots e Q-Q plots.
+- Resultados reproduzíveis em JSON, figura exportada e discussão das limitações da regressão para classificar intenções.
+- Dependências de scikit-learn adicionadas sem atualização das dependências anteriores.
+
 ## 📦 Ainda não publicado — TP2
 
 - API com validação JWT, armazenamento SQLModel, consulta de predição por proprietário, cabeçalhos HTTP, CORS e limite de tentativas de login.
