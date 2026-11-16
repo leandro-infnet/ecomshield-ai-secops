@@ -1,0 +1,74 @@
+{
+  "python": "3.14.4",
+  "bibliotecas": {
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.1",
+    "nbclient": "0.11.0"
+  },
+  "dataset_sha256": "6f81102b0100b97b8468eb04368033a23206bf1fde9d53500d5806ec1001a434",
+  "qualidade": {
+    "linhas": 26872,
+    "colunas": 5,
+    "ausentes_por_coluna": {
+      "flags": 0,
+      "instruction": 0,
+      "category": 0,
+      "intent": 0,
+      "response": 0
+    },
+    "linhas_duplicadas": 0,
+    "textos_repetidos": 2237,
+    "textos_vazios": 0,
+    "textos_com_rotulos_conflitantes": 0
+  },
+  "divisao": {
+    "semente": 42,
+    "linhas_treino": 21466,
+    "linhas_teste": 5406,
+    "grupos_treino": 19708,
+    "grupos_teste": 4927,
+    "grupos_compartilhados": 0,
+    "fracao_linhas_teste": 0.2011759452217922
+  },
+  "metricas": [
+    {
+      "modelo": "baseline_media",
+      "r2_treino": 0.0,
+      "r2_teste": -0.00015961852897850015,
+      "rmse_teste_caracteres": 10.754452316670916
+    },
+    {
+      "modelo": "linear_simples",
+      "r2_treino": 0.6605748533462104,
+      "r2_teste": 0.6657912987357032,
+      "rmse_teste_caracteres": 6.216737313108166
+    },
+    {
+      "modelo": "linear_multipla",
+      "r2_treino": 0.6612865631562954,
+      "r2_teste": 0.6666745226325845,
+      "rmse_teste_caracteres": 6.208517294606756
+    }
+  ],
+  "residuos": {
+    "linear_simples": {
+      "media": 0.028964769065706258,
+      "desvio": 6.217244895500415,
+      "assimetria": 0.4529523765383236,
+      "excesso_curtose": 0.4430612848320119,
+      "min_previsao": 20.619509405353345,
+      "max_previsao": 71.84349908836137
+    },
+    "linear_multipla": {
+      "media": 0.02415871930341768,
+      "desvio": 6.2090445909726455,
+      "assimetria": 0.4390121087411862,
+      "excesso_curtose": 0.42857163673136967,
+      "min_previsao": 20.54272525145356,
+      "max_previsao": 72.21597637699864
+    }
+  }
+}

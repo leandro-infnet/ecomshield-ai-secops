@@ -1,5 +1,7 @@
 # Auditoria passiva OWASP ZAP — TP2
 
+Registro histórico do TP2. A [auditoria final do TP3](tp3-auditoria-final.md) ampliou a cobertura para tráfego autenticado e interfaces de documentação, corrigindo os findings encontrados nesse novo escopo.
+
 ## Escopo e execução
 
 A auditoria usou a imagem oficial `ghcr.io/zaproxy/zaproxy:stable` contra a API iniciada **somente em `127.0.0.1:18081`**, com SQLite e conta sintéticos. O scan principal foi `zap-api-scan.py` com `-f openapi -S` (modo seguro: sem scan ativo) e importou oito URLs do `/openapi.json`. O baseline complementar usou `zap-baseline.py` com spider de um minuto; alcançou cinco URLs. O [guia oficial do baseline](https://www.zaproxy.org/docs/docker/baseline-scan/) descreve o spider seguido de análise passiva. Não houve tráfego a API externa nem teste de terceiros.

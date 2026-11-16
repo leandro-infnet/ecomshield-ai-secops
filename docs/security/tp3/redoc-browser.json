@@ -1,0 +1,21 @@
+{
+  "title": "E-ComShield API - ReDoc",
+  "sections": 11,
+  "loaded": true,
+  "styles": [
+    {
+      "nonce": true,
+      "rules": 1
+    },
+    {
+      "nonce": false,
+      "rules": 12
+    },
+    {
+      "nonce": true,
+      "rules": 298
+    }
+  ],
+  "text": "Operacional\nAutenticação\nPredições\nAPI docs by Redocly\nE-ComShield API (2.0.0)\n\nDownload OpenAPI specification:Download\n\nAPI demonstrativa consolidada no TP3. Autenticação JWT, registro de predições placeholder e consulta por proprietário. Ainda não ",
+  "logs": []
+}

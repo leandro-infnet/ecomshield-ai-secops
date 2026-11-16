@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, health, predict
+from app.api.routes import auth, documentation, health, predict
 from app.core.security import secret_key
 from app.db.database import init_db
 
@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="E-ComShield API", description="API demonstrativa do TP2", version="2.0.0", lifespan=lifespan)
+app = FastAPI(title="E-ComShield API", description="API demonstrativa consolidada no TP3. Autenticação JWT, registro de predições placeholder e consulta por proprietário. Ainda não há classificador treinado. Use somente dados sintéticos nos testes.", version="2.0.0", lifespan=lifespan, docs_url=None, redoc_url=None)
 origins = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "").split(",") if origin.strip()]
 app.add_middleware(CORSMiddleware, allow_origins=origins, allow_methods=["GET", "POST"], allow_headers=["Authorization", "Content-Type"], allow_credentials=False)
 
@@ -27,14 +27,8 @@ async def security_headers(request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
-    if request.url.path in {"/docs", "/redoc"}:
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; "
-            "connect-src 'self'; frame-ancestors 'none'"
-        )
-    else:
-        response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'"
+    if "Content-Security-Policy" not in response.headers:
+        response.headers["Content-Security-Policy"] = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
     response.headers["Cache-Control"] = "no-store"
     response.headers["Referrer-Policy"] = "no-referrer"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
@@ -45,3 +39,5 @@ async def security_headers(request, call_next):
 app.include_router(health.router, tags=["Operacional"])
 app.include_router(auth.router, tags=["Autenticação"])
 app.include_router(predict.router, tags=["Predições"])
+
+app.include_router(documentation.router)

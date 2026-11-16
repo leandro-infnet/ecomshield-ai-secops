@@ -15,15 +15,24 @@ class LoginRequest(BaseModel):
 
 class PredictRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
-    texto_cliente: str = Field(min_length=5, max_length=100, description="Mensagem do cliente")
+    texto_cliente: str = Field(min_length=5, max_length=100, description="Mensagem do cliente; de 5 a 100 caracteres", examples=["Onde esta meu pedido?"])
+
+
+class HealthResponse(BaseModel):
+    status: Literal["ok"]
+    servico: str
+
+
+class ErrorResponse(BaseModel):
+    detail: str = Field(description="Descrição do erro, sem credenciais ou tokens")
 
 
 class Token(BaseModel):
-    access_token: str
-    token_type: str
+    access_token: str = Field(description="JWT a enviar no header Authorization: Bearer <token>")
+    token_type: str = Field(description="Tipo do token: bearer")
 
 
 class PredictResponse(BaseModel):
     id: int
-    intencao_prevista: str
-    confianca: float
+    intencao_prevista: str = Field(description="Placeholder demonstrativo; não é classificação por modelo treinado")
+    confianca: float = Field(description="Valor demonstrativo 0.0; não é probabilidade calibrada")

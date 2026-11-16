@@ -13,3 +13,27 @@
 - **Rate limiting:** limite de tentativas em uma janela de tempo; aqui, cinco requisições de autenticação por IP em 60 segundos.
 - **Scan passivo:** análise de tráfego observado sem enviar payloads de exploração ativa. A cobertura depende das rotas visitadas.
 - **p-valor:** probabilidade, sob a hipótese nula e as premissas do teste, de obter resultado ao menos tão extremo quanto o observado.
+
+- **Regressão linear:** modelo que estima um alvo numérico por uma combinação linear dos atributos; simples com um atributo e múltipla com dois ou mais.
+- **Pipeline:** sequência de transformações e estimador; mantém o ajuste do pré-processamento dentro dos dados de treino.
+- **Baseline:** referência simples para comparação; na regressão do TP3, a previsão constante da média do treino.
+- **R² — coeficiente de determinação:** comparação do erro quadrático do modelo com a variabilidade do alvo em torno da média do conjunto avaliado; pode ser negativo e não representa acurácia de classificação.
+- **RMSE — Root Mean Squared Error (Raiz do Erro Quadrático Médio):** medida que penaliza erros grandes e tem a unidade do alvo; no TP3, caracteres.
+- **Resíduo:** diferença entre valor observado e previsto; positivo indica subestimação.
+- **Q-Q plot — Quantile-Quantile plot (Gráfico Quantil-Quantil):** comparação de quantis de duas distribuições; aqui, resíduos padronizados contra referência normal.
+- **Homocedasticidade:** variância aproximadamente constante dos erros ao longo das condições avaliadas.
+- **Vazamento de dados:** uso, no ajuste ou seleção, de informação que deveria ficar reservada à avaliação; textos repetidos entre treino e teste podem tornar a estimativa de generalização otimista.
+
+- **CSP — Content Security Policy (Política de Segurança de Conteúdo):** política do navegador que limita as origens e formas de execução de recursos; precisa ser compatível com as interfaces que protege.
+- **Nonce de CSP:** valor aleatório novo por resposta que autoriza os scripts ou estilos correspondentes no HTML; não é token de autenticação.
+- **SRI — Subresource Integrity (Integridade de Sub-recurso):** hash declarado no HTML para o navegador conferir o conteúdo de um asset externo antes de utilizá-lo.
+- **OpenAPI:** especificação dos endpoints, contratos e mecanismos de autenticação HTTP; Swagger UI e ReDoc são interfaces que a apresentam.
+
+- **Aprendizado supervisionado:** aprendizagem de uma relação entre entradas e alvos conhecidos, como mensagem e intenção, para prever o alvo de novas entradas.
+- **Classificação multiclasse de rótulo único:** escolha de uma classe entre várias possibilidades, atribuindo um único rótulo a cada entrada.
+- **Macro-F1:** média do F1 calculado separadamente para cada classe, atribuindo o mesmo peso às classes; F1 combina precisão e recall pela média harmônica.
+- **TF-IDF — Term Frequency–Inverse Document Frequency (Frequência do Termo–Inverso da Frequência nos Documentos):** representação numérica que pondera a frequência de termos e reduz o peso dos mais disseminados no corpus.
+- **Regressão logística:** classificador que estima probabilidades de classes a partir dos atributos; apesar do nome, não é regressão de um alvo contínuo.
+- **SVM — Support Vector Machine (Máquina de Vetores de Suporte):** família de modelos que separa classes por fronteiras aprendidas com base em margens; a alternativa linear do plano opera sobre vetores TF-IDF.
+- **Separação estratificada por grupos:** divisão que busca preservar a proporção de classes mantendo cada grupo inteiro em uma partição; usada no plano para evitar cópias da mensagem entre treino e teste.
+- **Calibração de probabilidades:** ajuste que busca aproximar probabilidades estimadas das frequências observadas; uma pontuação alta não garante, por si, essa correspondência.

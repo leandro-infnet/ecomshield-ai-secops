@@ -1,12 +1,18 @@
-# 🛡️ E-ComShield — TP2
+# 🛡️ E-ComShield — TP3 em desenvolvimento
 
-API demonstrativa de atendimento para registrar uma intenção placeholder por mensagem e consultar o registro pelo proprietário. O projeto inclui EDA estatística e controles de segurança do TP2. **Ainda não há modelo treinado:** `track_refund_placeholder` e `confianca=0.0` não representam inferência nem probabilidade calibrada.
+API demonstrativa de atendimento para registrar uma intenção placeholder por mensagem e consultar o registro pelo proprietário. O projeto inclui EDA estatística e controles de segurança do TP2. No exercício 1 do TP3, foram ajustadas regressões de comprimento de texto em notebook, sem integração à API. **Ainda não há classificador treinado:** `track_refund_placeholder` e `confianca=0.0` não representam inferência nem probabilidade calibrada.
 
 ## 📚 Percurso de leitura
 
+- [Consolidação do TP3 e matriz da rubrica](docs/tp3-relatorio.md): exercícios 1–5 com evidências e planejamento técnico do exercício 6 concluído; colega adversário e confirmação de acesso ainda pendentes.
 - [Resumo técnico do TP2](docs/tp2-relatorio.md)
 - [Relatório de EDA](docs/eda/tp2.md) e [notebook executado](notebooks/01_eda_ecomshield.ipynb)
+- [Regressão do TP3: resultados e reprodução](docs/eda/tp3-regressao.md) e [notebook executado](notebooks/02_regressao_ecomshield.ipynb)
+- [Pergunta de classificação e distribuição das 27 intenções](docs/classificacao-tp3.md)
+- [Planejamento T2: modelo, atributos, avaliação e acordo adversarial pendente](docs/planejamento-t2.md)
 - [Fluxo de dados](docs/architecture/dfd.md), [ameaças](docs/security/stride.md), [mapa OWASP API Top 10](docs/security/owasp-api-top10.md) e [findings ZAP](docs/security/zap-findings.md)
+- [Auditoria final do TP3 e reprodução do ambiente sintético](docs/security/tp3-auditoria-final.md)
+- [CI do TP3: workflow, validação e proteção de main](docs/security/tp3-ci.md) e [evidências remotas de bloqueio e recuperação](docs/ci/index.md)
 - [Glossário](docs/glossario.md) e [changelog](CHANGELOG.md)
 
 ## 🚀 Início rápido
@@ -39,21 +45,21 @@ venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --no-proxy-
 
 A API valida assinatura HS256, expiração e sujeito do JWT contra usuário existente. Senhas são armazenadas com PBKDF2-HMAC-SHA256 e salt aleatório. A consulta de predição filtra `id` e `owner_id` com SQLModel; o dono vem da identidade validada. Os modelos de entrada de `/auth/token` e `/predict` usam Pydantic `extra='forbid'` e rejeitam campos extras com 422. `/predict` também rejeita tipos não textuais e entradas fora dos limites. Respostas incluem HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff` e CSP. CORS aceita apenas as origens em `CORS_ORIGINS`; vazio significa nenhuma origem permitida ao navegador.
 
-`/auth/token` aceita **cinco tentativas por IP de conexão a cada 60 segundos**; a sexta recebe 429 e `Retry-After`. A janela curta dificulta tentativas rápidas de senha em uma instância local sem impor bloqueio permanente. O comando local usa `--no-proxy-headers` para que o Uvicorn preserve o IP da conexão, mesmo quando o cliente envia `X-Forwarded-For`. Sem essa opção, o Uvicorn confia por padrão em headers enviados por clientes loopback, permitindo contornar o limite ao variar o IP declarado. Atrás de um proxy real, será necessário configurar explicitamente os proxies confiáveis e a sanitização desses headers. O contador é em memória por processo e não serve como controle distribuído em múltiplas réplicas; requer armazenamento compartilhado e controles de infraestrutura em produção. HSTS só tem efeito em HTTPS; o servidor local HTTP é demonstrativo. `/docs` e `/redoc` usam CSP específica para os assets da interface hospedados no jsDelivr, enquanto respostas da API usam política mais restritiva.
+`/auth/token` aceita **cinco tentativas por IP de conexão a cada 60 segundos**; a sexta recebe 429 e `Retry-After`. A janela curta dificulta tentativas rápidas de senha em uma instância local sem impor bloqueio permanente. O comando local usa `--no-proxy-headers` para que o Uvicorn preserve o IP da conexão, mesmo quando o cliente envia `X-Forwarded-For`. Sem essa opção, o Uvicorn confia por padrão em headers enviados por clientes loopback, permitindo contornar o limite ao variar o IP declarado. Atrás de um proxy real, será necessário configurar explicitamente os proxies confiáveis e a sanitização desses headers. O contador é em memória por processo e não serve como controle distribuído em múltiplas réplicas; requer armazenamento compartilhado e controles de infraestrutura em produção. HSTS só tem efeito em HTTPS; o servidor local HTTP é demonstrativo. `/docs` e `/redoc` usam CSP com nonce por resposta e assets do jsDelivr em versões fixadas com integridade SRI. As respostas da API usam política mais restritiva; veja as [correções e evidências da auditoria final](docs/security/tp3-auditoria-final.md).
 
 O SQLite local é demonstrativo. Não há migrações, recuperação de conta, rotação de chave, TLS na própria aplicação, monitoramento de abuso nem inferência real. Os textos enviados são armazenados no banco local; use apenas dados sintéticos em testes.
 
 ## ✅ Verificação
 
 ```bash
-venv/bin/python -m pytest tests/
+venv/bin/python -m pytest tests/ -v
 ```
 
-A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento de `.env`. Os sete testes incluem rejeição de extras no login e limite de tentativas com `X-Forwarded-For` variável na cadeia ASGI do Uvicorn configurada com proxy headers desabilitados. Veja o [relatório ZAP](docs/security/zap-findings.md) para escopo e achados do scan passivo. Um scan passivo não substitui testes autenticados de autorização nem comprova conformidade integral com o OWASP Top 10.
+A suíte usa SQLite temporário, dados sintéticos e desabilita o carregamento de `.env`. A suíte final do exercício 4 tem 39 casos aprovados: os 37 cenários anteriores de autenticação, BOLA, entradas inválidas, limites válidos, headers, CORS e rate limiting, mais dois casos de nonce e integridade das interfaces de documentação. A [matriz de cobertura e evidência da execução](docs/security/tp3-testes.md) detalha os cenários e as limitações. O limite também é verificado com `X-Forwarded-For` variável na cadeia ASGI do Uvicorn configurada com proxy headers desabilitados. Veja o [relatório ZAP](docs/security/zap-findings.md) para escopo e achados do scan passivo. Um scan passivo não substitui testes autenticados de autorização nem comprova conformidade integral com o OWASP Top 10.
 
 ## Fontes e uso de IA
 
 - [OWASP API Security Top 10 de 2023](https://api-security.owasp.org/editions/2023/en/0x11-t10/)
 - [SQLModel: consultas filtradas](https://sqlmodel.tiangolo.com/tutorial/where/)
 - [OWASP ZAP: baseline passivo](https://www.zaproxy.org/docs/docker/baseline-scan/)
-- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2; os resultados informados nos artefatos vieram de execuções locais.
+- Codex (OpenAI) auxiliou no código, análise, testes e redação do TP2 e nos exercícios 1 a 6 do TP3; os artefatos distinguem execuções locais, planejamento e evidências remotas do GitHub fornecidas pelo aluno.

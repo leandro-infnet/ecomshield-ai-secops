@@ -1,0 +1,267 @@
+{
+  "alvo": "http://127.0.0.1:18081",
+  "zap": "2.17.0",
+  "modo": "safe",
+  "fila_passiva": 0,
+  "instante_utc": "2026-11-10T00:10:50.861035+00:00",
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "rota": "/health",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/docs",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/redoc",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/openapi.json",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/predictions/3",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/predictions/3",
+      "esperado": 404,
+      "obtido": 404
+    },
+    {
+      "metodo": "GET",
+      "rota": "/predictions/4",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/predictions/4",
+      "esperado": 404,
+      "obtido": 404
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 401,
+      "obtido": 401
+    },
+    {
+      "metodo": "GET",
+      "rota": "/predictions/3",
+      "esperado": 401,
+      "obtido": 401
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 401,
+      "obtido": 401
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 422,
+      "obtido": 422
+    },
+    {
+      "metodo": "POST",
+      "rota": "/predict",
+      "esperado": 422,
+      "obtido": 422
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 422,
+      "obtido": 422
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 401,
+      "obtido": 401
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 401,
+      "obtido": 401
+    },
+    {
+      "metodo": "POST",
+      "rota": "/auth/token",
+      "esperado": 429,
+      "obtido": 429
+    },
+    {
+      "metodo": "GET",
+      "rota": "/health",
+      "esperado": 200,
+      "obtido": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/health",
+      "esperado": 200,
+      "obtido": 200
+    }
+  ],
+  "ids_criados": {
+    "alice": 3,
+    "bob": 4
+  },
+  "alertas": [
+    {
+      "id": "10055",
+      "alerta": "CSP: Failure to Define Directive with No Fallback",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "10055",
+      "alerta": "CSP: Failure to Define Directive with No Fallback",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10055",
+      "alerta": "CSP: script-src unsafe-inline",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "10055",
+      "alerta": "CSP: script-src unsafe-inline",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10055",
+      "alerta": "CSP: style-src unsafe-inline",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10055",
+      "alerta": "CSP: style-src unsafe-inline",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "10017",
+      "alerta": "Cross-Domain JavaScript Source File Inclusion",
+      "risco": "Low",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10017",
+      "alerta": "Cross-Domain JavaScript Source File Inclusion",
+      "risco": "Low",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "10109",
+      "alerta": "Modern Web Application",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10109",
+      "alerta": "Modern Web Application",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "90003",
+      "alerta": "Sub Resource Integrity Attribute Missing",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "90003",
+      "alerta": "Sub Resource Integrity Attribute Missing",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "90003",
+      "alerta": "Sub Resource Integrity Attribute Missing",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/docs"
+    },
+    {
+      "id": "90003",
+      "alerta": "Sub Resource Integrity Attribute Missing",
+      "risco": "Medium",
+      "url": "http://127.0.0.1:18081/redoc"
+    },
+    {
+      "id": "10111",
+      "alerta": "Authentication Request Identified",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/auth/token"
+    },
+    {
+      "id": "10111",
+      "alerta": "Authentication Request Identified",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/auth/token"
+    },
+    {
+      "id": "10112",
+      "alerta": "Session Management Response Identified",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/auth/token"
+    },
+    {
+      "id": "10111",
+      "alerta": "Authentication Request Identified",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/auth/token"
+    },
+    {
+      "id": "10111",
+      "alerta": "Authentication Request Identified",
+      "risco": "Informational",
+      "url": "http://127.0.0.1:18081/auth/token"
+    }
+  ]
+}
